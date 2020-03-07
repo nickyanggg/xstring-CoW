@@ -72,10 +72,6 @@ xs *xs_new(xs *x, const void *p)
     return x;
 }
 
-/* Memory leaks happen if the string is too long but it is still useful for
- * short strings.
- * "" causes a compile-time error if x is not a string literal or too long.
- */
 #define xs_tmp(x) \
     xs_new(&xs_literal_empty(), x)
 
@@ -305,14 +301,5 @@ xs *xs_tok(xs *x, const char *delim)
 
 int main()
 {
-    xs string = *xs_tmp("\n aaaaaaaaaaaaaaaaaaaa   \n\n");
-    xs cpy_string = *xs_tmp("kkk");
-    xs string_arr[255];
-    for (int i = 0; i < 255; ++i) {
-        string_arr[i] = *xs_tmp("kkk");
-        xs_copy(string_arr + i, &string);
-        printf("===\n%p\n", string_arr[i].ptr);
-        printf("%d\n===\n", (unsigned char)*(string_arr[i].ptr + string_arr[i].size + 1));
-    }
     return 0;
 }
