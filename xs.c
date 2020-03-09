@@ -202,6 +202,8 @@ xs *xs_copy(xs *dest, xs *src)
 {
     if (!dest || !src)
         return dest;
+    if (xs_data(dest) == xs_data(src))
+        return dest;
     if (xs_is_ptr(dest)) {
         xs_ref_counter(dest) -= 1;
         if (!xs_ref_counter(dest))
@@ -228,7 +230,7 @@ xs *xs_tok(xs *x, const char *delim)
 
     if (x == NULL)
         x = xs_copy(xs_tmp(""), old);
-    if (xs_data(x) == '\0') {
+    if (*xs_data(x) == '\0') {
         xs_copy(old, x);
         return NULL;
     }
@@ -297,9 +299,37 @@ xs *xs_tok(xs *x, const char *delim)
 #undef set_bit
 }
 
+// for testing
+void str_copy_max(xs *x)
+{
+    for (int i = 1; i < MAX_REF_COUNTER; i++) {
+        char *c = malloc(sizeof(char) * strlen(xs_data(x)) + 1);
+        strcpy(c, xs_data(x));
+    }
+}
+
+// for testing
+void xs_copy_max(xs *x) {
+    if ((unsigned char) xs_ref_counter(x) == MAX_REF_COUNTER) {
+        xs *tmp = xs_copy(xs_tmp(""), x);
+        x = tmp;
+    }
+    for (int i = 1; i < MAX_REF_COUNTER; i++)
+        xs_copy(xs_tmp(""), x);
+}
+
 #include <stdio.h>
 
 int main()
 {
+    int n = 400;
+    xs *string1 = xs_tmp("AAAAAAAAAAAAAAAAAAAA"); 
+    for (int i = 0; i < n; i++) {
+        // Case 1
+        xs_copy_max(string1);
+        // Case 2
+        str_copy_max(string1);
+    }
+    // without free
     return 0;
 }
