@@ -228,7 +228,7 @@ xs *xs_tok(xs *x, const char *delim)
 
     if (x == NULL)
         x = xs_copy(xs_tmp(""), old);
-    if (xs_data(x) == '\0') {
+    if (*xs_data(x) == '\0') {
         xs_copy(old, x);
         return NULL;
     }
