@@ -322,14 +322,5 @@ void xs_copy_max(xs *x) {
 
 int main()
 {
-    int n = 400;
-    xs *string1 = xs_tmp("AAAAAAAAAAAAAAAAAAAA"); 
-    for (int i = 0; i < n; i++) {
-        // Case 1
-        xs_copy_max(string1);
-        // Case 2
-        str_copy_max(string1);
-    }
-    // without free
     return 0;
 }
